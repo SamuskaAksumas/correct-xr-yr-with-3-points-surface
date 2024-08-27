@@ -1,17 +1,26 @@
 import numpy as np
 
 def berechne_ebenen_normal(p1, p2, p3):
+
     # Berechne die Richtungsvektoren zwischen den Punkten
     v1 = np.array([p2[0] - p1[0], p2[1] - p1[1], p2[2] - p1[2]])
     v2 = np.array([p3[0] - p1[0], p3[1] - p1[1], p3[2] - p1[2]])
-    
+    print(v1,v2)
+
     # Berechne den Normalenvektor der Ebene durch das Kreuzprodukt
     normale = np.cross(v1, v2)
     normale /= np.linalg.norm(normale)  # Normalisieren des Normalenvektors
+    print(normale)
+
+    if normale.any() == 0:
+        raise ValueError("Die drei Punkte sind kollinear und definieren keine gültige Ebene.")
     
     return normale
 
+
+
 def korrigiere_orientierung(p, normale):
+
     # Extrahiere Rotationen des Punkts p (xr, yr)
     xr, yr, _ = p[3], p[4], p[5]  # zr wird ignoriert, da wir die Orientierung in der x-y-Ebene betrachten
     
@@ -32,6 +41,8 @@ def korrigiere_orientierung(p, normale):
     
     return (xr, yr, 0)  # Keine Korrektur nötig; zr bleibt auf 0
 
+
+
 def hauptfunktion(p1, p2, p3):
     # Berechne den Normalenvektor der Ebene, die durch p1, p2 und p3 definiert wird
     normale = berechne_ebenen_normal(p1, p2, p3)
@@ -46,9 +57,9 @@ def hauptfunktion(p1, p2, p3):
     }
 
 # Beispielpunkte
-p1 = (1, 2, 3, 0.1, 0.2, 0)  # Position und Rotation (xr, yr, zr)
-p2 = (4, 5, 6, 0, 0, 0)
-p3 = (7, 8, 9, 0, 0, 0)
+p1 = (1.0, 2.0, 10.0, 0.1, 0.2, 0.0)  # Position und Rotation (xr, yr, zr)
+p2 = (4.0, 5.0, 6.0, 0.0, 0.0, 0.0)
+p3 = (7.0, 8.0, 9.0, 0.0, 0.0, 0.0)
 
 ergebnis = hauptfunktion(p1, p2, p3)
 print("Normalenvektor der Ebene:", ergebnis['normale'])
